@@ -98,3 +98,46 @@ class AddressBook(UserDict):
             del self.data[name]
             return True
         return False
+    
+        # Отримання найближчих днів народження
+    def get_upcoming_birthdays(self):
+        today = datetime.now()
+        list_of_birthdays = []
+        
+        for record in self.data.values():
+            if record.birthday:
+                birthday = record.birthday.value
+                birthday_this_year = birthday.replace(year=today.year)        
+                
+                if birthday_this_year < today:
+                    birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+                
+                difference_in_days = (birthday_this_year - today).days
+                
+                if 0 <= difference_in_days <= 7:
+                    # Перевірка, чи не випадає день народження на вихідні
+                    if birthday_this_year.weekday() == 5:
+                        congratulation_date = birthday_this_year + timedelta(days=2)
+                    elif birthday_this_year.weekday() == 6:
+                        congratulation_date = birthday_this_year + timedelta(days=1)
+                    else:
+                        congratulation_date = birthday_this_year
+
+                    list_of_birthdays.append({ 
+                        "name": record.name.value,
+                        "congratulation_date": congratulation_date.strftime("%d.%m.%Y")
+                    })
+        return list_of_birthdays
+    
+    # Декоратор для обробки помилок
+    def input_error(func):
+        def inner(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except KeyError:
+                return "Contact not found."
+            except ValueError:
+                return "Give me name and phone."
+            except IndexError:
+                return "Invalid command format. Use: add [name] [phone], change [name] [new_phone], phone [name]"
+        return inner
