@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List, Dict
 import sys
 import os
 from collections import UserDict
@@ -12,25 +12,27 @@ class Field:
 
     def __str__(self):
         return str(self.value)
-    
+
 # Клас для збереження імені контакту
 class Name(Field):
     def __init__(self, value):
         if not value:
-            raise ValueError('Name cannot be empty')
+            raise ValueError("Name cannot be empty")
         super().__init__(value)
+
 
 # Клас для збереження та валідації номера телефону
 class Phone(Field):
     def __init__(self, value):
         if not self.validate_phone(value):
-            raise ValueError('Phone number must have 10 digits')
+            raise ValueError("Phone number must be 10 digits")
         super().__init__(value)
 
     @staticmethod
     def validate_phone(value):
         return value.isdigit() and len(value) == 10
-    
+
+
 # Клас для збереження дати народження
 class Birthday(Field):
     def __init__(self, value):
@@ -38,11 +40,12 @@ class Birthday(Field):
             self.value = datetime.strptime(value, '%d.%m.%Y')
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
-
+    
     def __str__(self):
         return self.value.strftime('%d.%m.%Y')
-        
-# Клас для запису в адресній книзі
+
+
+# Клас, який представляє запис у адресній книзі
 class Record:
     def __init__(self, name):
         self.name = Name(name)
@@ -60,7 +63,7 @@ class Record:
                 self.phones.remove(p)
                 return True
         return False
-    
+
     # Редагування номера телефону
     def edit_phone(self, old_phone, new_phone):
         for i, p in enumerate(self.phones):
@@ -68,7 +71,7 @@ class Record:
                 self.phones[i] = Phone(new_phone)
                 return True
         return False
-    
+
     # Пошук номера телефону
     def find_phone(self, phone):
         for p in self.phones:
@@ -82,7 +85,7 @@ class Record:
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday}"
-    
+
 # Клас адресної книги
 class AddressBook(UserDict):
     def add_record(self, record):
@@ -91,7 +94,7 @@ class AddressBook(UserDict):
     # Пошук контакту
     def find(self, name):
         return self.data.get(name)
-    
+
     # Видалення контакту
     def delete(self, name):
         if name in self.data:
@@ -99,7 +102,7 @@ class AddressBook(UserDict):
             return True
         return False
     
-        # Отримання найближчих днів народження
+    # Отримання найближчих днів народження
     def get_upcoming_birthdays(self):
         today = datetime.now()
         list_of_birthdays = []
@@ -128,7 +131,7 @@ class AddressBook(UserDict):
                         "congratulation_date": congratulation_date.strftime("%d.%m.%Y")
                     })
         return list_of_birthdays
-    
+
 # Декоратор для обробки помилок
 def input_error(func):
     def inner(*args, **kwargs):
@@ -140,9 +143,9 @@ def input_error(func):
             return "Give me name and phone."
         except IndexError:
             return "Invalid command format. Use: add [name] [phone], change [name] [new_phone], phone [name]"
-    return inner    
-    
-# Додавання контакту та обробка помилок
+    return inner
+
+# Додавання контакту з обробкою помилок
 @input_error
 def add_contact(book: AddressBook, args: str) -> str:
     parts = args
@@ -158,7 +161,7 @@ def add_contact(book: AddressBook, args: str) -> str:
         record.add_phone(p)
     return "Contact added."
 
-# Зміна контакту та обробка помилок
+# Зміна контакту з обробкою помилок
 @input_error
 def change_contact(book: AddressBook, name: str, old_phone: str, new_phone: str) -> str:
     record = book.find(name)
@@ -188,8 +191,7 @@ def remove_contact(book: AddressBook, name: str) -> str:
         return "Contact removed."
     return "Contact not found."
 
-
-# Додавання дати народження та обробка помилок
+# Додавання дати народження з обробкою помилок
 @input_error
 def add_birthday(book: AddressBook, name: str, birthday: str) -> str:
     record = book.find(name)
@@ -206,9 +208,13 @@ def show_birthday(book: AddressBook, name: str) -> str:
         return f'Birthday: {record.birthday}'
     return "Contact not found."
 
-
-
-
+# Показати найближчі дні народження з обробкою помилок
+@input_error
+def birthdays(book: AddressBook) -> str:
+    records = book.get_upcoming_birthdays()
+    if records:
+        return '\n'.join(['Name: ' + str(record['name'])+'. Cong_date: '+str(record['congratulation_date']) for record in records])
+    return 'No upcoming birthdays.'
 
 # Парсинг вводу користувача
 def parse_input(user_input: str) -> (str, List[str]):
