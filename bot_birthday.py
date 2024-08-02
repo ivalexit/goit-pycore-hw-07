@@ -200,7 +200,7 @@ def add_birthday(book: AddressBook, name: str, birthday: str) -> str:
         return "Birthday added."
     return "Contact not found."
 
-# Показати дату народження з обробкою помилок
+# Показати дату народження та обробка помилок
 @input_error
 def show_birthday(book: AddressBook, name: str) -> str:
     record = book.find(name)
