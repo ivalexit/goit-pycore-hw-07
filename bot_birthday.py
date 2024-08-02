@@ -187,3 +187,40 @@ def remove_contact(book: AddressBook, name: str) -> str:
     if book.delete(name):
         return "Contact removed."
     return "Contact not found."
+
+
+
+
+
+
+
+
+
+
+# Головна функція
+def main():
+    book = AddressBook()
+    print("Welcome to the assistant bot!")
+    while True:
+        user_input = input()
+        command, args = parse_input(user_input)
+        if command == "hello":
+            print("How can I help you?")
+        elif command == "add":
+            print(add_contact(book, args))
+        elif command == "change":
+            print(change_contact(book, *args))
+        elif command == "phone":
+            print(show_phone(book, *args))
+        elif command == "all":
+            print(show_all(book))
+        elif command == "remove":
+            print(remove_contact(book, *args))
+        elif command in ("exit", "close"):
+            print("Good bye!")
+            break
+        else:
+            print("Invalid command.")
+
+if __name__ == "__main__":
+    main()
