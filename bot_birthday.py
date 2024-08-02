@@ -129,15 +129,40 @@ class AddressBook(UserDict):
                     })
         return list_of_birthdays
     
-    # Декоратор для обробки помилок
-    def input_error(func):
-        def inner(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except KeyError:
-                return "Contact not found."
-            except ValueError:
-                return "Give me name and phone."
-            except IndexError:
-                return "Invalid command format. Use: add [name] [phone], change [name] [new_phone], phone [name]"
-        return inner
+# Декоратор для обробки помилок
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyError:
+            return "Contact not found."
+        except ValueError:
+            return "Give me name and phone."
+        except IndexError:
+            return "Invalid command format. Use: add [name] [phone], change [name] [new_phone], phone [name]"
+    return inner    
+    
+# Додавання контакту та обробка помилок
+@input_error
+def add_contact(book: AddressBook, args: str) -> str:
+    parts = args
+    name = parts[0]
+    phones = parts[1:]
+    if not name or not phones:
+        raise ValueError
+    record = book.find(name)
+    if not record:
+        record = Record(name)
+        book.add_record(record)
+    for p in phones:
+        record.add_phone(p)
+    return "Contact added."
+
+# Зміна контакту та обробка помилок
+@input_error
+def change_contact(book: AddressBook, name: str, old_phone: str, new_phone: str) -> str:
+    record = book.find(name)
+    if record and record.edit_phone(old_phone, new_phone):
+        return "Contact updated."
+    return "Contact not found."
+
