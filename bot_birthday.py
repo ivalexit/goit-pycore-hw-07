@@ -210,7 +210,12 @@ def show_birthday(book: AddressBook, name: str) -> str:
 
 
 
-
+# Парсинг вводу користувача
+def parse_input(user_input: str) -> (str, List[str]):
+    parts = user_input.strip().split(maxsplit=3)
+    command = parts[0].lower()
+    args = parts[1:]
+    return command, args
 
 # Головна функція
 def main():
