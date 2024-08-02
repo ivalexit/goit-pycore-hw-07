@@ -30,3 +30,15 @@ class Phone(Field):
     @staticmethod
     def validate_phone(value):
         return value.isdigit() and len(value) == 10
+    
+# Клас для збереження дати народження
+class Birthday(Field):
+    def __init__(self, value):
+        try:
+            self.value = datetime.strptime(value, '%d.%m.%Y')
+        except ValueError:
+            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+
+    def __str__(self):
+        return self.value.strftime('%d.%m.%Y')
+        
