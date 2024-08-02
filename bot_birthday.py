@@ -166,3 +166,10 @@ def change_contact(book: AddressBook, name: str, old_phone: str, new_phone: str)
         return "Contact updated."
     return "Contact not found."
 
+# Показати номер телефону контакту з обробкою помилок
+@input_error
+def show_phone(book: AddressBook, name: str) -> str:
+    record = book.find(name)
+    if record:
+        return ', '.join(phone.value for phone in record.phones)
+    return "Contact not found."
