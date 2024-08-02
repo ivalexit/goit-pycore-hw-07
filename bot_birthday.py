@@ -189,7 +189,14 @@ def remove_contact(book: AddressBook, name: str) -> str:
     return "Contact not found."
 
 
-
+# Додавання дати народження та обробка помилок
+@input_error
+def add_birthday(book: AddressBook, name: str, birthday: str) -> str:
+    record = book.find(name)
+    if record:
+        record.add_birthday(birthday)
+        return "Birthday added."
+    return "Contact not found."
 
 
 
