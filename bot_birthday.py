@@ -42,3 +42,21 @@ class Birthday(Field):
     def __str__(self):
         return self.value.strftime('%d.%m.%Y')
         
+# Клас для запису в адресній книзі
+class Record:
+    def __init__(self, name):
+        self.name = Name(name)
+        self.phones = []
+        self.birthday = None
+
+    # Додавання номера телефону
+    def add_phone(self, phone):
+        self.phones.append(Phone(phone))
+
+    # Видалення номера телефону
+    def remove_phone(self, phone):
+        for p in self.phones:
+            if p.value == phone:
+                self.phones.remove(p)
+                return True
+        return False
