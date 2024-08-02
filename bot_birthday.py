@@ -173,3 +173,10 @@ def show_phone(book: AddressBook, name: str) -> str:
     if record:
         return ', '.join(phone.value for phone in record.phones)
     return "Contact not found."
+
+# Показати всі контакти з обробкою помилок
+@input_error
+def show_all(book: AddressBook) -> str:
+    if book:
+        return "\n".join([str(record) for record in book.values()])
+    return "No contacts found."
