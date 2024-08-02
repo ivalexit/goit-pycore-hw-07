@@ -180,3 +180,10 @@ def show_all(book: AddressBook) -> str:
     if book:
         return "\n".join([str(record) for record in book.values()])
     return "No contacts found."
+
+# Видалення контакту з обробкою помилок
+@input_error
+def remove_contact(book: AddressBook, name: str) -> str:
+    if book.delete(name):
+        return "Contact removed."
+    return "Contact not found."
