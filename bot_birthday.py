@@ -75,3 +75,10 @@ class Record:
             if p.value == phone:
                 return p
         return None
+    
+    # Додавання дати народження
+    def add_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
+
+    def __str__(self):
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday}"
