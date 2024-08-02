@@ -202,8 +202,9 @@ def main():
     book = AddressBook()
     print("Welcome to the assistant bot!")
     while True:
-        user_input = input()
+        user_input = input("Menu:\n1- add\n2- change \n3- phone \n4- all \n5- remove\n6- add-birthday\n7- show-birthday\n8- birthdays\n9- exit or close\n10- hello\ncommand: ")
         command, args = parse_input(user_input)
+
         if command == "hello":
             print("How can I help you?")
         elif command == "add":
@@ -216,6 +217,12 @@ def main():
             print(show_all(book))
         elif command == "remove":
             print(remove_contact(book, *args))
+        elif command == "add-birthday":
+            print(add_birthday(book, *args))
+        elif command == "show-birthday":
+            print(show_birthday(book, *args))
+        elif command == "birthdays":
+            print(birthdays(book))
         elif command in ("exit", "close"):
             print("Good bye!")
             break
