@@ -87,3 +87,14 @@ class Record:
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
+
+    # Пошук контакту
+    def find(self, name):
+        return self.data.get(name)
+    
+    # Видалення контакту
+    def delete(self, name):
+        if name in self.data:
+            del self.data[name]
+            return True
+        return False
